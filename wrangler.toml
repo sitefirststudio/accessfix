@@ -28,6 +28,11 @@ id = "7e46c48df730442680d957691e039065"
 DAILY_LIMIT = "150"     # Workers Paid. On the free plan use 12.
 NOTIFY_FROM = "check@accessfix.net"
 NOTIFY_TO = "sitefirststudio@gmail.com"
+# Outreach list: checked automatically, 3 per hour, report links emailed to NOTIFY_TO. Format host|lang
+PROSPECTS = "dailypaperclothing.com|en,nordgreen.com|en,morenutrition.de|de,lillydoo.com|de,ooia.de|de,hellobody.de|de,representclo.com|en,armedangels.com|de,de.holy.com|de,purelei.com|de,snocks.com|de,oceansapart.com|de"
+
+[triggers]
+crons = ["7 * * * *"]
 
 # Workers Paid: allow enough CPU time for driving the browser
 [limits]
