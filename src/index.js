@@ -39,7 +39,51 @@ export default {
     if (path.startsWith('/api/')) return json({ error: 'not_found' }, 404);
     return env.ASSETS.fetch(request);
   },
+
+  // Hourly: check up to 3 stores from the PROSPECTS list that have no report yet,
+  // and email the report links to the Site First inbox for outreach.
+  async scheduled(event, env, ctx) {
+    const list = String(env.PROSPECTS || '').split(',').map((x) => x.trim()).filter(Boolean);
+    let done = 0;
+    for (const item of list) {
+      if (done >= 3) break;
+      const [raw, langRaw] = item.split('|');
+      const store = normaliseStore(raw);
+      if (!store) continue;
+      const host = new URL(store).host.replace(/^www\./, '');
+      if (await env.REPORTS.get('p:' + host)) continue;
+      done++;
+      const lang = langRaw === 'de' ? 'de' : 'en';
+      try {
+        const r = await runScan(env, store, host, lang, SITE);
+        await env.REPORTS.put('p:' + host, r.id, { expirationTtl: REPORT_TTL });
+        await recordLead(env, { id: r.id, host, lang, total: r.total, link: SITE + (lang === 'de' ? '/de' : '') + '/r/' + r.id, prospect: true });
+      } catch (e) {
+        // mark as tried so a broken store doesn't block the queue; retried after 7 days
+        await env.REPORTS.put('p:' + host, 'failed', { expirationTtl: 60 * 60 * 24 * 7 });
+        await recordLead(env, { id: null, host, lang, prospect: true, failed: String((e && e.code) || (e && e.message) || e).slice(0, 120) });
+      }
+    }
+  },
 };
+
+const SITE = 'https://accessfix.net';
+
+async function runScan(env, store, host, lang, origin) {
+  let browser;
+  try {
+    browser = await puppeteer.launch(env.BROWSER);
+    const ua = (await browser.userAgent()) + UA_SUFFIX;
+    const res = await scanStore(browser, store, origin + '/assets/vendor/axe.min.js', { userAgent: ua });
+    const id = newId();
+    const report = { id, ...res, lang, scannedAt: new Date().toISOString() };
+    await env.REPORTS.put('r:' + id, JSON.stringify(report), { expirationTtl: REPORT_TTL });
+    await env.REPORTS.put('h:' + host, id, { expirationTtl: HOST_CACHE_TTL });
+    return { id, total: res.issues.reduce((s, i) => s + i.count, 0) };
+  } finally {
+    if (browser) await browser.close().catch(() => {});
+  }
+}
 
 function normaliseStore(input) {
   if (typeof input !== 'string') return null;
@@ -101,24 +145,14 @@ async function handleScan(request, env, ctx, reqUrl) {
   }
   await env.REPORTS.put(day, String(used + 1), { expirationTtl: 60 * 60 * 48 });
 
-  let browser;
   try {
-    browser = await puppeteer.launch(env.BROWSER);
-    const ua = (await browser.userAgent()) + UA_SUFFIX;
-    const res = await scanStore(browser, store, reqUrl.origin + '/assets/vendor/axe.min.js', { userAgent: ua });
-    const id = newId();
-    const report = { id, ...res, lang, scannedAt: new Date().toISOString() };
-    await env.REPORTS.put('r:' + id, JSON.stringify(report), { expirationTtl: REPORT_TTL });
-    await env.REPORTS.put('h:' + host, id, { expirationTtl: HOST_CACHE_TTL });
-    const total = res.issues.reduce((s, i) => s + i.count, 0);
+    const { id, total } = await runScan(env, store, host, lang, reqUrl.origin);
     ctx.waitUntil(recordLead(env, { id, host, email: consent ? email : null, lang, total, link: reqUrl.origin + (lang === 'de' ? '/de' : '') + '/r/' + id }));
     return json({ id });
   } catch (e) {
     if (e && e.code === 'unreachable') return json({ error: 'unreachable' }, 422);
     console.error('scan failed', host, e && (e.stack || e.message));
     return json({ error: 'failed' }, 500);
-  } finally {
-    if (browser) ctx.waitUntil(browser.close().catch(() => {}));
   }
 }
 
@@ -128,14 +162,15 @@ async function recordLead(env, lead) {
   try { await env.REPORTS.put('lead:' + at + ':' + (lead.id || newId()), JSON.stringify(rec), { expirationTtl: REPORT_TTL }); } catch (e) { console.error('lead store', e); }
   if (!env.NOTIFY || !env.NOTIFY_FROM || !env.NOTIFY_TO) return;
   try {
-    const subject = `Access Fix check: ${lead.host}${lead.total != null ? ` (${lead.total} problems)` : ''}${lead.email ? ' + email' : ''}`;
+    const subject = `${lead.prospect ? 'Prospect report' : 'Access Fix check'}: ${lead.host}${lead.total != null ? ` (${lead.total} problems)` : ''}${lead.email ? ' + email' : ''}`;
     const text = [
       `Store: ${lead.host}`,
       lead.total != null ? `Problems found: ${lead.total}` : '',
       lead.link ? `Report: ${lead.link}` : '',
       lead.cached ? 'Re-used a report from the last 24 hours.' : '',
       lead.queued ? 'Daily limit reached: run this check manually tomorrow.' : '',
-      lead.email ? `Contact (consented to one follow-up email): ${lead.email}` : 'No email left.',
+      lead.prospect ? (lead.failed ? `Prospect check failed (${lead.failed}). It will be retried in 7 days.` : 'Prospect from your outreach list. Use this report link in your message.') : '',
+      lead.prospect ? '' : lead.email ? `Contact (consented to one follow-up email): ${lead.email}` : 'No email left.',
       `Language: ${lead.lang}`, `Time: ${at}`,
     ].filter(Boolean).join('\r\n');
     const raw = [
