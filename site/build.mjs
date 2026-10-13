@@ -372,19 +372,19 @@ const LEGAL = {
     impressum: `<h1>Impressum</h1>
 <p>Information under § 5 of the German Digital Services Act (DDG) and Article 5 of the EU e-Commerce Directive.</p>
 <h2>Service provider</h2>
-<p>Site First Studio<br>${F('[Full legal name of owner or company]')}<br>${F('[Street and number]')}<br>${F('[Postcode] Budapest, Hungary')}</p>
+<p>Emad Sharif Mohseni, sole trader (egyéni vállalkozó), trading as Site First Studio<br>Könyves Kálmán körút 12–14<br>1097 Budapest, Hungary</p>
 <h2>Contact</h2>
-<p>Email: <a href="mailto:hello@accessfix.net">hello@accessfix.net</a><br>Phone: ${F('[Phone number]')}</p>
+<p>Email: <a href="mailto:hello@accessfix.net">hello@accessfix.net</a><br>Phone: +36 20 613 9478</p>
 <h2>Registration and tax</h2>
-<p>${F('[Company register and number, or sole-trader registration number]')}<br>VAT ID: ${F('[EU VAT number, e.g. HU12345678]')}</p>
+<p>Registered sole trader in Hungary<br>Hungarian tax number (adószám): 43815326-1-43</p>
 <h2>Responsible for content</h2>
-<p>${F('[Full name]')}, address as above.</p>
+<p>Emad Sharif Mohseni, address as above.</p>
 <h2>Online dispute resolution</h2>
 <p>We are not obliged and not willing to take part in dispute resolution proceedings before a consumer arbitration board. Our services are offered to businesses only.</p>`,
     privacy: `<h1>Privacy notice</h1>
 <p>Last updated: 12 October 2026</p>
 <h2>Who is responsible</h2>
-<p>Site First Studio, ${F('[Full legal name, address]')}, Budapest, Hungary. Email: <a href="mailto:hello@accessfix.net">hello@accessfix.net</a>.</p>
+<p>Emad Sharif Mohseni, sole trader trading as Site First Studio, Könyves Kálmán körút 12–14, 1097 Budapest, Hungary. Email: <a href="mailto:hello@accessfix.net">hello@accessfix.net</a>.</p>
 <h2>What we process and why</h2>
 <ul>
 <li><strong>Store address you enter.</strong> We load the public pages of that store and save the check result for 90 days so you can open and share your report. Legal basis: Art. 6(1)(b) GDPR (providing the check you asked for).</li>
@@ -415,19 +415,19 @@ const LEGAL = {
     impressum: `<h1>Impressum</h1>
 <p>Angaben gemäß § 5 Digitale-Dienste-Gesetz (DDG).</p>
 <h2>Anbieter</h2>
-<p>Site First Studio<br>${F('[Vollständiger Name des Inhabers oder der Firma]')}<br>${F('[Straße und Hausnummer]')}<br>${F('[PLZ] Budapest, Ungarn')}</p>
+<p>Emad Sharif Mohseni, Einzelunternehmer (egyéni vállalkozó), handelnd als Site First Studio<br>Könyves Kálmán körút 12–14<br>1097 Budapest, Ungarn</p>
 <h2>Kontakt</h2>
-<p>E-Mail: <a href="mailto:hello@accessfix.net">hello@accessfix.net</a><br>Telefon: ${F('[Telefonnummer]')}</p>
+<p>E-Mail: <a href="mailto:hello@accessfix.net">hello@accessfix.net</a><br>Telefon: +36 20 613 9478</p>
 <h2>Register und Steuern</h2>
-<p>${F('[Handelsregister und Nummer bzw. Registriernummer als Einzelunternehmer]')}<br>USt-IdNr.: ${F('[EU-USt-IdNr., z. B. HU12345678]')}</p>
+<p>Eingetragener Einzelunternehmer in Ungarn<br>Ungarische Steuernummer (adószám): 43815326-1-43</p>
 <h2>Verantwortlich für den Inhalt</h2>
-<p>${F('[Vollständiger Name]')}, Anschrift wie oben.</p>
+<p>Emad Sharif Mohseni, Anschrift wie oben.</p>
 <h2>Verbraucherstreitbeilegung</h2>
 <p>Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen. Unsere Leistungen richten sich ausschließlich an Unternehmen.</p>`,
     privacy: `<h1>Datenschutzerklärung</h1>
 <p>Stand: 12. Oktober 2026</p>
 <h2>Verantwortlicher</h2>
-<p>Site First Studio, ${F('[Vollständiger Name, Anschrift]')}, Budapest, Ungarn. E-Mail: <a href="mailto:hello@accessfix.net">hello@accessfix.net</a>.</p>
+<p>Emad Sharif Mohseni, Einzelunternehmer handelnd als Site First Studio, Könyves Kálmán körút 12–14, 1097 Budapest, Ungarn. E-Mail: <a href="mailto:hello@accessfix.net">hello@accessfix.net</a>.</p>
 <h2>Was wir verarbeiten und warum</h2>
 <ul>
 <li><strong>Die eingegebene Shop-Adresse.</strong> Wir laden die öffentlichen Seiten dieses Shops und speichern das Ergebnis 90 Tage, damit Sie Ihren Bericht öffnen und teilen können. Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (Durchführung des angefragten Checks).</li>
