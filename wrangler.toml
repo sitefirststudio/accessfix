@@ -26,6 +26,8 @@ id = "7e46c48df730442680d957691e039065"
 
 [vars]
 DAILY_LIMIT = "150"     # Workers Paid. On the free plan use 12.
+NOTIFY_FROM = "check@accessfix.net"
+NOTIFY_TO = "sitefirststudio@gmail.com"
 
 # Workers Paid: allow enough CPU time for driving the browser
 [limits]
@@ -34,9 +36,7 @@ cpu_ms = 300000
 [observability]
 enabled = true
 
-# Lead notifications to the Site First Gmail. Enable after Email Routing is on for accessfix.net
-# and sitefirststudio@gmail.com is a verified destination address:
-# [[send_email]]
-# name = "NOTIFY"
-# destination_address = "sitefirststudio@gmail.com"
-# [vars] NOTIFY_FROM = "check@accessfix.net"  NOTIFY_TO = "sitefirststudio@gmail.com"
+# Lead notifications to the Site First Gmail (verified Email Routing destination)
+[[send_email]]
+name = "NOTIFY"
+destination_address = "sitefirststudio@gmail.com"
