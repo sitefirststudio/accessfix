@@ -1,0 +1,20 @@
+{
+  "name": "accessfix",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "node site/build.mjs",
+    "deploy": "npm run build && wrangler deploy",
+    "dev": "npm run build && wrangler dev"
+  },
+  "dependencies": {
+    "@cloudflare/puppeteer": "^1.0.0"
+  },
+  "devDependencies": {
+    "@fontsource/atkinson-hyperlegible-mono": "^5.2.0",
+    "@fontsource/atkinson-hyperlegible-next": "^5.2.0",
+    "axe-core": "^4.10.0",
+    "wrangler": "^4.0.0"
+  }
+}

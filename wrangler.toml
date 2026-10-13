@@ -1,0 +1,37 @@
+name = "accessfix"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+
+# Site: run `npm run build` first (Workers Builds: build command "npm run build")
+[assets]
+directory = "./public"
+binding = "ASSETS"
+not_found_handling = "404-page"
+run_worker_first = ["/api/*", "/r/*", "/de/r/*"]
+
+[[routes]]
+pattern = "accessfix.net"
+custom_domain = true
+
+# Headless Chrome for the free check
+[browser]
+binding = "BROWSER"
+
+# Reports, rate limits, leads. Leave id out on first deploy and wrangler creates it.
+[[kv_namespaces]]
+binding = "REPORTS"
+
+[vars]
+DAILY_LIMIT = "12"      # free plan: 10 browser-minutes/day. Raise to ~150 on Workers Paid.
+
+[observability]
+enabled = true
+
+# Lead notifications to the Site First Gmail. Enable after Email Routing is on for accessfix.net
+# and sitefirststudio@gmail.com is a verified destination address:
+# [[send_email]]
+# name = "NOTIFY"
+# destination_address = "sitefirststudio@gmail.com"
+# [vars] NOTIFY_FROM = "check@accessfix.net"  NOTIFY_TO = "sitefirststudio@gmail.com"
