@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /r/
+Disallow: /de/r/
+Sitemap: https://accessfix.net/sitemap.xml
