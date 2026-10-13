@@ -19,12 +19,17 @@ custom_domain = true
 [browser]
 binding = "BROWSER"
 
-# Reports, rate limits, leads. Leave id out on first deploy and wrangler creates it.
+# Reports, rate limits, leads (namespace "accessfix-reports")
 [[kv_namespaces]]
 binding = "REPORTS"
+id = "7e46c48df730442680d957691e039065"
 
 [vars]
-DAILY_LIMIT = "12"      # free plan: 10 browser-minutes/day. Raise to ~150 on Workers Paid.
+DAILY_LIMIT = "150"     # Workers Paid. On the free plan use 12.
+
+# Workers Paid: allow enough CPU time for driving the browser
+[limits]
+cpu_ms = 300000
 
 [observability]
 enabled = true
