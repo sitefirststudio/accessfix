@@ -5,6 +5,7 @@
 //   GET  /api/leads?key=…   ->  recent leads (needs ADMIN_KEY secret)
 import puppeteer from '@cloudflare/puppeteer';
 import { scanStore } from './scan.js';
+import { EmailMessage } from 'cloudflare:email';
 
 const REPORT_TTL = 60 * 60 * 24 * 90; // 90 days
 const HOST_CACHE_TTL = 60 * 60 * 24;  // same store re-checked at most once a day
@@ -127,7 +128,6 @@ async function recordLead(env, lead) {
   try { await env.REPORTS.put('lead:' + at + ':' + (lead.id || newId()), JSON.stringify(rec), { expirationTtl: REPORT_TTL }); } catch (e) { console.error('lead store', e); }
   if (!env.NOTIFY || !env.NOTIFY_FROM || !env.NOTIFY_TO) return;
   try {
-    const { EmailMessage } = await import('cloudflare:email');
     const subject = `Access Fix check: ${lead.host}${lead.total != null ? ` (${lead.total} problems)` : ''}${lead.email ? ' + email' : ''}`;
     const text = [
       `Store: ${lead.host}`,
